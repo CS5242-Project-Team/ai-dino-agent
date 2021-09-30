@@ -36,14 +36,14 @@ directory_cleaned_inaction = os.path.join(current_directory, 'cleaned_data', 'in
 
 
 def process_space_bar():
-	global DEBUG, space_bar_screenshots
-	print("space_bar") if DEBUG else None
+	global space_bar_screenshots
+	print("space_bar")
 	space_bar_screenshots.append(pyautogui.screenshot())
 
 
 def process_key_down():
-	global DEBUG, key_down_screenshots
-	print("key_down") if DEBUG else None
+	global key_down_screenshots
+	print("key_down")
 	key_down_screenshots.append(pyautogui.screenshot())
 
 
@@ -83,7 +83,7 @@ def create_necessary_folders():
 
 
 def main():
-	print("Running collection script...")
+	print("Running data collection script...")
 	print("---")
 	create_necessary_folders()
 
@@ -100,7 +100,6 @@ def main():
 
 	# Keyboard waiting for input...
 	print("Waiting for keyboard input...")
-	print("---")
 	keyboard.wait()
 
 
