@@ -2,10 +2,10 @@ import keyboard
 import pyautogui
 import time
 import os
+from multiprocessing import Process
 
 global space_bar_screenshots
 global key_down_screenshots
-global inaction_screenshots
 global user_id
 
 ########################################## START Config ############################################
@@ -36,15 +36,21 @@ directory_cleaned_inaction = os.path.join(current_directory, 'cleaned_data', 'in
 
 
 def process_space_bar():
-	global space_bar_screenshots
-	print("space_bar")
+	global space_bar_screenshots, game_start
+	game_start = True
+	print("space_bar") if DEBUG else None
 	space_bar_screenshots.append(pyautogui.screenshot())
 
 
 def process_key_down():
 	global key_down_screenshots
-	print("key_down")
+	print("key_down") if DEBUG else None
 	key_down_screenshots.append(pyautogui.screenshot())
+
+
+def process_inaction():
+	print("inaction") if DEBUG else None
+	save_single_screenshot(pyautogui.screenshot(), directory_inaction)
 
 
 def save_single_screenshot(screenshot, directory):
@@ -64,9 +70,6 @@ def save_all_screenshots():
 	for screenshot in key_down_screenshots:
 		save_single_screenshot(screenshot, directory_duck)
 
-	for screenshot in inaction_screenshots:
-		save_single_screenshot(screenshot, directory_inaction)
-
 
 def create_necessary_folders():
 	print("Creating necessary folders...")
@@ -82,25 +85,39 @@ def create_necessary_folders():
 	os.makedirs(directory_cleaned_inaction) if not os.path.exists(directory_cleaned_inaction) else None
 
 
+def capture_jump_duck():
+	# Keyboard waiting for input...
+	print("Waiting for keyboard input...")
+	keyboard.wait()
+
+
+def capture_inaction():
+	while True:
+		process_inaction()
+		time.sleep(1)
+
+
 def main():
 	print("Running data collection script...")
 	print("---")
 	create_necessary_folders()
 
 	# initialize arrays for screenshots
-	global space_bar_screenshots, key_down_screenshots, inaction_screenshots
+	global space_bar_screenshots, key_down_screenshots
 	space_bar_screenshots = []
 	key_down_screenshots = []
-	inaction_screenshots = []
 
 	# assign function for each key press
 	keyboard.add_hotkey('space', lambda: process_space_bar())
 	keyboard.add_hotkey(keyboard.KEY_UP, lambda: process_space_bar())
 	keyboard.add_hotkey(keyboard.KEY_DOWN, lambda: process_key_down())
 
-	# Keyboard waiting for input...
-	print("Waiting for keyboard input...")
-	keyboard.wait()
+	p1 = Process(target=capture_jump_duck)
+	p1.start()
+	p2 = Process(target=capture_inaction)
+	p2.start()
+	p1.join()
+	p2.join()
 
 
 if __name__ == '__main__':
