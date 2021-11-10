@@ -6,20 +6,22 @@ import torch
 import pyautogui
 import os
 
-from model_architectures import MLP
+from model_architectures import MLP, LeNet5_convnet
 
 # -------------------------- CONFIG ---------------------------
 BINARY_MODEL_NAME = 'mlp.pt'
+
 IMAGE_SIZE = 255
+# -------------------------- END CONFIG ---------------------------
+
 WIDTH, HEIGHT = pyautogui.size()
 BINARY_MODEL_PATH = os.path.join('binary_models', BINARY_MODEL_NAME)
-# -------------------------- END CONFIG ---------------------------
 
 
 # Assign model
 def get_model():
-    model = MLP()
-    # model = CNN()
+    # model = MLP()
+    model = LeNet5_convnet()
 
     return model
 
