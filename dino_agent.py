@@ -20,8 +20,8 @@ BINARY_MODEL_PATH = os.path.join('binary_models', BINARY_MODEL_NAME)
 
 # Assign model
 def get_model():
-    # model = MLP()
-    model = LeNet5_convnet()
+    model = MLP()
+    # model = LeNet5_convnet()
 
     return model
 
