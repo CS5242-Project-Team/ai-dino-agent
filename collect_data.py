@@ -2,8 +2,7 @@ import keyboard
 import pyautogui
 import time
 import os
-from multiprocessing import Process
-
+from threading import Lock, Thread
 global space_bar_screenshots
 global key_down_screenshots
 global user_id
@@ -34,12 +33,16 @@ directory_cleaned_jump = os.path.join(current_directory, 'cleaned_data', 'jump')
 directory_cleaned_duck = os.path.join(current_directory, 'cleaned_data', 'duck')
 directory_cleaned_inaction = os.path.join(current_directory, 'cleaned_data', 'inaction')
 
+mutex = Lock()
+
 
 def process_space_bar():
-	global space_bar_screenshots, game_start
-	game_start = True
+	mutex.acquire()
+	global space_bar_screenshots
 	print("space_bar") if DEBUG else None
 	space_bar_screenshots.append(pyautogui.screenshot())
+	time.sleep(0.5)
+	mutex.release()
 
 
 def process_key_down():
@@ -93,7 +96,9 @@ def capture_jump_duck():
 
 def capture_inaction():
 	while True:
+		mutex.acquire()
 		process_inaction()
+		mutex.release()
 		time.sleep(1)
 
 
@@ -112,9 +117,9 @@ def main():
 	keyboard.add_hotkey(keyboard.KEY_UP, lambda: process_space_bar())
 	keyboard.add_hotkey(keyboard.KEY_DOWN, lambda: process_key_down())
 
-	p1 = Process(target=capture_jump_duck)
+	p1 = Thread(target=capture_jump_duck)
 	p1.start()
-	p2 = Process(target=capture_inaction)
+	p2 = Thread(target=capture_inaction)
 	p2.start()
 	p1.join()
 	p2.join()
