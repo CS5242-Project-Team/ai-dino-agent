@@ -11,9 +11,10 @@ global user_id
 DEBUG = True
 # DEBUG = False
 
-user = 'vignesh'
+# user = 'vignesh'
 # user = 'niranjana'
 # user = 'prakash'
+user = 'joes'
 ########################################## END Config ############################################
 
 if user == 'vignesh':
@@ -22,6 +23,8 @@ elif user == 'niranjana':
 	user_id = 2
 elif user == 'prakash':
 	user_id = 3
+elif user == 'joes':
+	user_id = 4
 
 current_directory = os.getcwd()
 
