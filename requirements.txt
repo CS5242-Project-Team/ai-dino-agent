@@ -1,2 +1,8 @@
 keyboard
+numpy
 pyautogui
+mss
+selenium
+webdriver_manager
+pillow
+torch

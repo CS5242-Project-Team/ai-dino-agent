@@ -1,12 +1,14 @@
-import keyboard
-from PIL import Image
-import numpy as np
 from mss import mss
+import numpy as np
 import pyautogui
 import os
 
 from model_architectures import *
 
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.keys import Keys
+from PIL import Image
 # -------------------------- CONFIG ---------------------------
 IMAGE_SIZE = 32
 
@@ -26,8 +28,12 @@ BINARY_MODEL_NAME = 'vanilla_rnn_v2.pt'
 MODEL = VanillaRNN(input_size=IMAGE_SIZE*IMAGE_SIZE)
 # -------------------------- END CONFIG ---------------------------
 
+
+# ----------------------------VARIABLES-----------------------------
 WIDTH, HEIGHT = pyautogui.size()
 BINARY_MODEL_PATH = os.path.join('binary_models', BINARY_MODEL_NAME)
+GAME_ELEMENT = None
+# ----------------------------END VARIABLES-------------------------
 
 
 # Image transformations
@@ -47,12 +53,7 @@ def process_image(image):
     return image_data
 
 
-# A function for go up in the game
-def up():
-    keyboard.press_and_release(keyboard.KEY_UP)
-
-
-def get_prediction(X):
+def get_prediction(net, X):
     if ARCHITECTURE == 'mlp':
         X = X.view(1, -1).float()
         return net(X)
@@ -68,14 +69,45 @@ def get_prediction(X):
         pass
 
 
-if __name__ == '__main__':
-    ss_manager = mss()
-    frame = {"top": 0, "left": 0, "width": WIDTH, "height": HEIGHT}
+def start_game():
+    options = webdriver.ChromeOptions()
+    options.add_argument("--mute-audio")
+    options.add_argument('--disable-extensions')
+    options.add_argument("--start-maximized")
+    options.add_argument("--start-fullscreen")
+    options.add_experimental_option("excludeSwitches", ['enable-automation'])
 
+    # create driver
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+
+    # get to dino game
+    try:
+        driver.get("chrome://dino")
+    except:
+        pass
+
+    # Set game speed == 6
+    driver.execute_script("Runner.config.MAX_SPEED = 6;")
+
+    # start game
+    global GAME_ELEMENT
+    GAME_ELEMENT = driver.find_element_by_tag_name("body")
+    GAME_ELEMENT.send_keys(Keys.SPACE)
+
+    return driver
+
+
+if __name__ == '__main__':
     # Load model
     net = MODEL
     net.load_state_dict(torch.load(BINARY_MODEL_PATH, map_location=torch.device('cpu')))
     net.eval()
+
+    # screen capture
+    ss_manager = mss()
+    frame = {"top": 0, "left": 0, "width": WIDTH, "height": HEIGHT}
+
+    driver = start_game()
 
     while True:
         # Grab screenshot
@@ -86,13 +118,13 @@ if __name__ == '__main__':
 
         # Predict
         X = torch.from_numpy(transformed_image)
-        prediction = get_prediction(X)
+        prediction = get_prediction(net, X)
         result = np.argmax(prediction.detach().numpy())
 
         # Take action
         if result == 0:  # go right
             print("right")
         elif result == 1:  # go up
-            up()
+            GAME_ELEMENT.send_keys(Keys.SPACE)
             print("up")
         print("--------------------------")
