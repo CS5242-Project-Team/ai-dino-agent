@@ -6,7 +6,6 @@ selenium
 webdriver_manager
 pillow
 torch
-torch
 torchvision
 matplotlib
 sklearn
