@@ -1,5 +1,4 @@
-/cleaned_data
-/raw_data
+/data/
 .idea/
 
 __pycache__/
