@@ -10,24 +10,32 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from PIL import Image
 # -------------------------- CONFIG ---------------------------
-IMAGE_SIZE = 32
-
 # ARCHITECTURE = 'mlp'
 # ARCHITECTURE = 'cnn'
-ARCHITECTURE = 'rnn'
-# ARCHITECTURE = 'ann'
+# ARCHITECTURE = 'rnn'
+ARCHITECTURE = 'ann'
 
-# BINARY_MODEL_NAME = 'mlp.pt'
-# BINARY_MODEL_NAME = 'cnn.pt'
-# BINARY_MODEL_NAME = 'banana_v1.pt'
-BINARY_MODEL_NAME = 'vanilla_rnn_v2.pt'
+if ARCHITECTURE == 'mlp':
+    IMAGE_SIZE = 255
+    BINARY_MODEL_NAME = 'mlp.pt'
+    MODEL = MLP()
 
-# MODEL = MLP()
-# MODEL = LeNet5_convnet()
-# MODEL = Banana()
-MODEL = VanillaRNN(input_size=IMAGE_SIZE*IMAGE_SIZE)
+if ARCHITECTURE == 'cnn':
+    IMAGE_SIZE = 51
+    BINARY_MODEL_NAME = 'banana_v1.pt'
+    MODEL = Banana()
+
+if ARCHITECTURE == 'rnn':
+    IMAGE_SIZE = 32
+    SEQ_LENGTH = 1
+    BINARY_MODEL_NAME = 'vanilla_rnn_v2.pt'
+    MODEL = VanillaRNN(input_size=int(IMAGE_SIZE*IMAGE_SIZE/SEQ_LENGTH))
+
+if ARCHITECTURE == 'ann':
+    IMAGE_SIZE = 224
+    BINARY_MODEL_NAME = 'ann.pt'
+    MODEL = VisionANN().vision_transformer
 # -------------------------- END CONFIG ---------------------------
-
 
 # ----------------------------VARIABLES-----------------------------
 WIDTH, HEIGHT = pyautogui.size()
@@ -48,25 +56,27 @@ def process_image(image):
 
     new_size = (IMAGE_SIZE, IMAGE_SIZE)
     image_data = image_data.resize(new_size)
-    image_data = np.array(image_data.resize(new_size))
+    # image_data.save("test.jpg")
+    image_data = np.array(image_data)
 
     return image_data
 
 
 def get_prediction(net, X):
     if ARCHITECTURE == 'mlp':
-        X = X.view(1, -1).float()
+        X = X.view(1, IMAGE_SIZE, IMAGE_SIZE).float()
         return net(X)
     elif ARCHITECTURE == 'cnn':
         X = X.view(1, 1, IMAGE_SIZE, IMAGE_SIZE).float()
         return net(X)
     elif ARCHITECTURE == 'rnn':
-        X = X.view(-1, 1, IMAGE_SIZE * IMAGE_SIZE).float()
-        h = torch.zeros(1, 1, IMAGE_SIZE * IMAGE_SIZE).float()
+        X = X.view(-1, SEQ_LENGTH, int(IMAGE_SIZE * IMAGE_SIZE/SEQ_LENGTH)).float()
+        h = torch.zeros(1, SEQ_LENGTH, int(IMAGE_SIZE * IMAGE_SIZE/SEQ_LENGTH)).float()
         scores, _ = net(X, h)
         return scores
     elif ARCHITECTURE == 'ann':
-        pass
+        X = X.view(1, 1, IMAGE_SIZE, IMAGE_SIZE).float()
+        return net(X)
 
 
 def start_game():

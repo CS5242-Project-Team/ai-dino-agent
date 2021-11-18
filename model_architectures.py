@@ -1,6 +1,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from linformer import Linformer
+from vit_pytorch.efficient import ViT
 
 #################################### MLP ##############################################
 class MLP(nn.Module):
@@ -12,7 +14,6 @@ class MLP(nn.Module):
         super().__init__()
         self.layers = nn.Sequential(
             nn.Flatten(),
-            # nn.Linear(255 * 255 * 3, 64),
             nn.Linear(255 * 255 * 1, 64),
             nn.ReLU(),
             nn.Linear(64, 32),
@@ -235,3 +236,24 @@ class VanillaRNN(nn.Module):
         score_seq = self.layer2(h_seq)
         score_seq = score_seq[:, -1]
         return score_seq, h_final
+
+#######################################################################################
+#################################### ANn ##############################################
+class VisionANN():
+    def __init__(self):
+        self.efficient_transformer = Linformer(
+            dim=128,
+            seq_len=49 + 1,  # 7x7 patches + 1 cls-token
+            depth=12,
+            heads=8,
+            k=64
+        )
+
+        self.vision_transformer = ViT(
+            dim=128,
+            image_size=224,
+            patch_size=32,
+            num_classes=2,
+            transformer=self.efficient_transformer,
+            channels=1,
+        )

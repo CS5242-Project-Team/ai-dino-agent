@@ -14,10 +14,10 @@ global user_id
 DEBUG = True
 # DEBUG = False
 
-# user = 'vignesh'
+user = 'vignesh'
 # user = 'niranjana'
 # user = 'prakash'
-user = 'joes'
+# user = 'joes'
 ########################################## END Config ############################################
 
 if user == 'vignesh':
@@ -31,13 +31,13 @@ elif user == 'joes':
 
 current_directory = os.getcwd()
 
-directory_jump = os.path.join(current_directory, 'raw_data', 'jump')
-directory_duck = os.path.join(current_directory, 'raw_data', 'duck')
-directory_inaction = os.path.join(current_directory, 'raw_data', 'inaction')
+directory_jump = os.path.join(current_directory, 'data', 'raw_data', 'jump')
+directory_duck = os.path.join(current_directory, 'data', 'raw_data', 'duck')
+directory_inaction = os.path.join(current_directory, 'data', 'raw_data', 'inaction')
 
-directory_cleaned_jump = os.path.join(current_directory, 'cleaned_data', 'jump')
-directory_cleaned_duck = os.path.join(current_directory, 'cleaned_data', 'duck')
-directory_cleaned_inaction = os.path.join(current_directory, 'cleaned_data', 'inaction')
+directory_cleaned_jump = os.path.join(current_directory, 'data', 'cleaned_data', 'jump')
+directory_cleaned_duck = os.path.join(current_directory, 'data', 'cleaned_data', 'duck')
+directory_cleaned_inaction = os.path.join(current_directory, 'data', 'cleaned_data', 'inaction')
 
 mutex = Lock()
 
@@ -138,7 +138,7 @@ def main():
 	p1.start()
 	p2.start()
 
-	p0.join(0)
+	p0.join(1)
 	p1.join(1)
 	p2.join(1)
 
