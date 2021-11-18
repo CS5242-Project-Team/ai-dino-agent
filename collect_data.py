@@ -3,6 +3,11 @@ import pyautogui
 import time
 import os
 from threading import Lock, Thread
+
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.keys import Keys
+
 global user_id
 
 ########################################## START Config ############################################
@@ -87,17 +92,53 @@ def capture_inaction():
 		time.sleep(0.5)
 
 
+def start_game():
+	options = webdriver.ChromeOptions()
+	options.add_argument("--mute-audio")
+	options.add_argument('--disable-extensions')
+	options.add_argument("--start-maximized")
+	options.add_argument("--start-fullscreen")
+	options.add_experimental_option("excludeSwitches", ['enable-automation'])
+
+	# create driver
+	driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+
+	# get to dino game
+	try:
+		driver.get("chrome://dino")
+	except:
+		pass
+
+	# Set game speed == 6
+	driver.execute_script("Runner.config.MAX_SPEED = 6;")
+
+	# start game
+	global GAME_ELEMENT
+	GAME_ELEMENT = driver.find_element_by_tag_name("body")
+	GAME_ELEMENT.send_keys(Keys.SPACE)
+
+	return driver
+
+
 def main():
 	print("Running data collection script...")
 	print("---")
 	create_necessary_folders()
 
+	p0 = Thread(target=start_game)
+	p0.daemon = True
+
 	p1 = Thread(target=capture_jump_duck)
 	p1.daemon = True
+
 	p2 = Thread(target=capture_inaction)
 	p2.daemon = True
+
+	p0.start()
 	p1.start()
 	p2.start()
+
+	p0.join(0)
 	p1.join(1)
 	p2.join(1)
 
