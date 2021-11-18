@@ -6,3 +6,10 @@ selenium
 webdriver_manager
 pillow
 torch
+torch
+torchvision
+matplotlib
+sklearn
+linformer
+vit_pytorch
+tqdm
