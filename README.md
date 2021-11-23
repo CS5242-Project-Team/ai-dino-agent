@@ -1,25 +1,22 @@
 <img width="125" src="/assets/dino_img.png">
 
 ### Introduction
-The AI Dino Agent is a computer program that plays the game [Chrome Dino](https://en.wikipedia.org/wiki/Dinosaur_Game) without any human aid. The goal of the agent is play the game in a way that is indistinguishable from a human, and also to attain a good high score. 
+The AI Dino Agent is a computer program that plays the [Chrome Dino](https://en.wikipedia.org/wiki/Dinosaur_Game) game without any human aid. The goal of the agent is to primarily attain a good high score and also to play the game in a way that is indistinguishable from a human. 
 
 ### Usage
-The project has only been tested with Windows.
+This project has only been tested with Windows. Therefore, ensure that you clone the repository to a Windows environment.
 
 #### Setup
-Since most of the code written for the following segments is in **Python (3.6.8)**, it is important to install the relevant pip packages.
-
-To install relevant packages, run the following line:
-
-```
-pip install -r requirements.txt
-```
-
-#### Run the Game
-
-```
-python dino_agent.py
-```
+1. Clone the repository
+2. Ensure **Python** version > **3.6.8**
+3. Install the relevant pip packages.    
+    ```
+    pip install -r requirements.txt
+    ```
+4. Run the Game
+    ```
+    python dino_agent.py
+    ```
 
 The agent in progress:
 
