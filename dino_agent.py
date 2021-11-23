@@ -11,9 +11,9 @@ from selenium.webdriver.common.keys import Keys
 from PIL import Image
 # -------------------------- CONFIG ---------------------------
 # ARCHITECTURE = 'mlp'
-# ARCHITECTURE = 'cnn'
+ARCHITECTURE = 'cnn'
 # ARCHITECTURE = 'rnn'
-ARCHITECTURE = 'ann'
+# ARCHITECTURE = 'ann'
 
 if ARCHITECTURE == 'mlp':
     IMAGE_SIZE = 255
