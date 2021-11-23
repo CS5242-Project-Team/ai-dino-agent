@@ -1,8 +1,11 @@
 /data/
 .idea/
+vig/
+
 /binary_models/ann.pt
 /binary_models/banana_v1.pt
 /binary_models/vanilla_rnn_v2.pt
+/binary_models/mlp.pt
 
 __pycache__/
 
