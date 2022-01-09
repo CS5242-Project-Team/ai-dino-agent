@@ -66,11 +66,11 @@ We mostly ended up using the first technique as it gave a quicker and efficient 
 Among all the architectures we experimented with, we observed the best results from the CNN category. We explored a few configurations with varying parameters and settled upon a LeNet5 based architecture (Banana) that gave the following performance:
 
 <p align="center">
-    <img width="300" src="/assets/banana.jpg">
+    <img width="300" src="/assets/banana.JPG">
 </p>
 
 <p align="center">
-    <img width="700" src="/assets/comparison.jpg">
+    <img width="700" src="/assets/comparison.JPG">
 </p>
 
 Based on the results from evaluating the test set and also evaluating using live games, we came to the conclusion that it was possible to solve the problem of building an AI Dino Agent - albeit on a modified game with simplified rules - by converting it into a classification problem.
