@@ -74,3 +74,14 @@ Among all the architectures we experimented with, we observed the best results f
 </p>
 
 Based on the results from evaluating the test set and also evaluating using live games, we came to the conclusion that it was possible to solve the problem of building an AI Dino Agent - albeit on a modified game with simplified rules - by converting it into a classification problem.
+
+### Contributors
+This project was done for a Master's level course - CS5242 Deep Learning I. 
+
+It was jointly done by the following students:
+
+[Jaivignesh Venugopal](https://github.com/jaivigneshvenugopal)
+
+[Niranjana Unnithan](https://github.com/NiranjanaUnnithan)
+
+[Omprakash Padmanaban](https://github.com/joesomprakash)
