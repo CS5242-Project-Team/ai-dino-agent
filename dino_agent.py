@@ -8,6 +8,7 @@ from model_architectures import *
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 from PIL import Image
 # -------------------------- CONFIG ---------------------------
 # ARCHITECTURE = 'mlp'
@@ -22,8 +23,12 @@ if ARCHITECTURE == 'mlp':
 
 if ARCHITECTURE == 'cnn':
     IMAGE_SIZE = 51
+
     BINARY_MODEL_NAME = 'banana_v1.pt'
     MODEL = Banana()
+
+    # BINARY_MODEL_NAME = 'citrus_v1.pt'
+    # MODEL = Citrus()
 
 if ARCHITECTURE == 'rnn':
     IMAGE_SIZE = 32
@@ -41,6 +46,7 @@ if ARCHITECTURE == 'ann':
 WIDTH, HEIGHT = pyautogui.size()
 BINARY_MODEL_PATH = os.path.join('binary_models', BINARY_MODEL_NAME)
 GAME_ELEMENT = None
+ACTIONS = None
 # ----------------------------END VARIABLES-------------------------
 
 
@@ -104,6 +110,7 @@ def start_game():
     GAME_ELEMENT = driver.find_element_by_tag_name("body")
     GAME_ELEMENT.send_keys(Keys.SPACE)
 
+    ACTIONS = ActionChains(driver)
     return driver
 
 

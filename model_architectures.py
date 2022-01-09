@@ -221,6 +221,47 @@ class Banana(nn.Module):
         x = self.linear2(x)
 
         return x
+
+
+class Citrus(nn.Module):
+
+    def __init__(self):
+        super(Citrus, self).__init__()
+
+        # CL1:   51 x 51  -->    100 x 50 x 50
+        self.conv1 = nn.Conv2d(1, 100, kernel_size=2, padding=0)
+
+        # MP1: 100 x 50 x 50 -->    100 x 25 x 25
+        self.pool1 = nn.MaxPool2d(2, 2)
+
+        # CL2:   100 x 25 x 25  -->    200 x 26 x 26
+        self.conv2 = nn.Conv2d(100, 200, kernel_size=2, padding=1)
+
+        # MP2: 200 x 26 x 26 -->    200 x 13 x 13
+        self.pool2 = nn.MaxPool2d(2, 2)
+
+        # LL1:   200 x 13 x 13  -->  1000
+        self.linear1 = nn.Linear(200 * 13 * 13, 1000)
+
+        # LL2:   1000  -->  2
+        self.linear2 = nn.Linear(1000, 2)
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = F.relu(x)
+        x = self.pool1(x)
+
+        x = self.conv2(x)
+        x = F.relu(x)
+        x = self.pool2(x)
+
+        x = x.view(-1, 200 * 13 * 13)
+        x = self.linear1(x)
+        x = F.relu(x)
+
+        x = self.linear2(x)
+
+        return x
 #######################################################################################
 #################################### RNN ##############################################
 class VanillaRNN(nn.Module):

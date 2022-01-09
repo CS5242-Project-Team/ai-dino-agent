@@ -13,7 +13,11 @@ This project has only been tested with Windows. Therefore, ensure that you clone
     ```
     pip install -r requirements.txt
     ```
-4. Run the Game
+4. Download the binary_models (**banana_v1.pt**) and save it under /binary_models folder
+    ```
+    https://drive.google.com/file/d/1VdKvKIX8Qy-dsi9Yh-kgKfYG9StoPshg/view?usp=sharing
+    ```
+5. Run the Game
     ```
     python dino_agent.py
     ```
@@ -46,6 +50,27 @@ At this point, it was difficult to determine if converting it to a classificatio
 
 The game naturally tends to increase the speed of the agent as the score increases. Since a static screenshot does not convey speed, we decided to **do away** with the speed aspect of the game for the time being. This way, the neural network would only learn to jump/duck for a single speed setting; constant speed of 6.
 
-#### Encoding Speed
+
+#### Architectures
+Four category of Neural Networks (NN) were explored to build a classifier for this task - Multi-Layer Perceptron (**MLP**), Convolutional Neural Network (**CNN**), Recurrent Neural Network (**RNN**) and Attention Neural Network (**ANN**). These categories were explored by first building the simplest architecture that was functional, and then subsequently increasing the number of parameters. These models were then trained and tested on the collected data - images - before packaged in a Selenium-based script to automate real-time game play.
+
+#### Model Evaluation
+Two evaluation techniques were considered for this task. Having a labelled dataset that we built from scratch allowed us to employ the simplest way to evaluate model accuracy - **by simply counting the number of wrong predictions over all test data**. This gave an accuracy score for each model. Therefore, this was the main metric used to quantify the performance of a model.
+
+The second approach, which we later developed, was to use the Selenium-based script to automate the game in real time. This allowed us to calculate the **average high score of a set of games for each model**, which served as a performance metric.
+
+We mostly ended up using the first technique as it gave a quicker and efficient way of measuring performance. In contrast, the second technique needed constant attention as a single game sometimes took > 5 minutes to complete.
+
 
 ### Final Solution
+Among all the architectures we experimented with, we observed the best results from the CNN category. We explored a few configurations with varying parameters and settled upon a LeNet5 based architecture (Banana) that gave the following performance:
+
+<p align="center">
+    <img width="300" src="/assets/banana.jpg">
+</p>
+
+<p align="center">
+    <img width="700" src="/assets/comparison.jpg">
+</p>
+
+Based on the results from evaluating the test set and also evaluating using live games, we came to the conclusion that it was possible to solve the problem of building an AI Dino Agent - albeit on a modified game with simplified rules - by converting it into a classification problem.
